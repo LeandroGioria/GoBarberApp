@@ -48,6 +48,15 @@ class AppointmentController {
         }
 
         const { provider_id, date } = req.body;
+        /**
+         * Check if provider id is the same as user id
+         */
+
+        if (req.userId === provider_id) {
+            return res.status(401).json({
+                error: 'Cannot create appointmens for yourself',
+            });
+        }
 
         /**
          * Check if provider_id a provider
