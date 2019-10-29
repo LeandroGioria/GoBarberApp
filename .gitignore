@@ -9,3 +9,7 @@ npm-debug.log
 yarn-error.log
 
 tmp
+
+# Environment variables
+#
+.env
