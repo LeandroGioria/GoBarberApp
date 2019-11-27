@@ -5,6 +5,7 @@ import path from 'path';
 import 'express-async-errors';
 import * as Sentry from '@sentry/node';
 import Youch from 'youch';
+import cors from 'cors';
 import routes from './routes';
 import sentryConfig from './config/sentry';
 
@@ -21,6 +22,10 @@ class App {
 
     middlewares() {
         this.server.use(Sentry.Handlers.requestHandler());
+        // Define which address can access the app
+        // Example: this.server.use(cors({ origin: 'https://rocketseat.com.br' }));
+        // Empty to access from any address
+        this.server.use(cors());
         this.server.use(express.json());
         this.server.use(
             '/files',
@@ -42,7 +47,6 @@ class App {
             }
 
             return res.status(500).json({ error: 'Internal server error' });
-            a;
         });
     }
 }
