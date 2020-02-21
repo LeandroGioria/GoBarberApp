@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
+import Brute from 'express-brute';
+import BruteRedis from 'express-brute-redis';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import authMiddleware from './app/middlewares/auth';
@@ -13,9 +15,14 @@ import AvailableController from './app/controllers/AvailableController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
+const bruteStore = new BruteRedis({
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+});
+const bruteForce = new Brute(bruteStore);
 
 routes.post('/users', UserController.store);
-routes.post('/sessions', SessionController.store);
+routes.post('/sessions', bruteForce.prevent, SessionController.store);
 
 // Only the routes below will use the middleware auth
 routes.use(authMiddleware);
